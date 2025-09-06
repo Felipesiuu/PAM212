@@ -16,4 +16,4 @@ class inicioPAM
         console.log("Porcentajes del parcial");
     }
 }
-
+const app = new inicioPAM();
