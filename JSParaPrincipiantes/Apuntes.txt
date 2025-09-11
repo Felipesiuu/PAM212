@@ -11,3 +11,7 @@ Tipos de datos en JS
  true                                    {
  false                                   Atributos del objeto 
  .                                       }
+
+Para comentar dentro de el codigo 
+/* ... */
+// 
