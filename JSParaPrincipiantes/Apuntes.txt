@@ -1,0 +1,13 @@
+Tipos de datos en JS
+
+ "Hola mundo" string                     Array 
+ 'Hola mundo' string                     ['joe', 'Juan', 'Felipe']
+.                                        [1,2,3,1,2,]
+ Number                                  [true, false, true]
+ 1000
+ -12.9
+.                                        object
+ Boolean                                 Programación orientada a objetos
+ true                                    {
+ false                                   Atributos del objeto 
+ .                                       }
