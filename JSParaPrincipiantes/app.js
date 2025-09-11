@@ -1,16 +1,19 @@
-let count = 1;
+// Funciones
 
-while(count > 50)
+function greeting(name)
 {
-    console.log(count);
-    count++;
+    console.log("hola"+ person)
 }
 
-let names = ["ryan","joe","john"]
+greeting ("Markus");
+greeting("Felipe");
+greeting("Luis");
+greeting("Brian");
 
-console.log(names.length)
-
-for(let i = names.length;i>= 0 ;i-- )
-{
-    console.log(names[i]);
+function add(n1, n2){
+    console.log(n1 + n2);
 }
+
+add(3,2);
+add(10000, 764);
+add(3123, 2145);
