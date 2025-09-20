@@ -18,3 +18,5 @@ console.log(cuadrado(8));
     "Hola, me llamo " + nombre + " y tengo " + edad + " años.";
 
  console.log(SaludoPersonalizado("Felipe","18"))
+
+ 
