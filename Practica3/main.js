@@ -25,3 +25,23 @@ function verificarUsuario(usuario) {
 verificarUsuario("Ivan")
     .then(res => console.log(res))
     .catch(err => console.error(err)); // Acesso denegado
+
+
+//Ejercicio 3
+function simularAPI(){
+    return new Promise (resolve => {
+        setTimeout(()  =>{
+            resolve("Datos recibidos");
+        },5000);
+    });
+} 
+
+async function ObtenerDatos() {
+        try {
+        const resultado = await simularAPI(); 
+        console.log(resultado); 
+    } catch (error) {
+        console.error("Error al obtener los datos:", error);
+    }
+}
+    ObtenerDatos();
