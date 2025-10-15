@@ -30,6 +30,7 @@ export default function App() {
 }
 
 
+
 // 3. Estilos: Zona de estilos 
 const styles = StyleSheet.create({
   container: {
