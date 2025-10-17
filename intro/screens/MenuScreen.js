@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
 import ContadorScrenn from './ContadorScrenn';
-import BotonesScreen from './BotonesScreen';
-import { Button } from 'react-native-web';
+import BotonesScreen from './BotonAndSwitch/BotonesScreen';
+import { Button } from 'react-native';
 import TextInpuntAlertScreen from './TextInpuntAlertScreen';
 import ScrollViewScreen from './ScrollViewScreen';
 import ImageBackgroungScreen from './ImageBackgroungScreen';
@@ -14,7 +14,7 @@ import BottomSheetScreen from './BottomSheetScreen';
 
 export default function MenuScreen() {
     const [screen, setScreen] = useState('menu');
-
+  console.log('Renderizando pantalla:', screen);
     switch(screen){
         case 'contador':
             return <ContadorScrenn/>
@@ -46,7 +46,7 @@ export default function MenuScreen() {
                         <Button onPress={()=>setScreen('scrollView')} title ='Pract:scrollView'/>
                         <Button onPress={()=>setScreen('flatlist')} title ='Pract:flatlist'/>
                         <Button onPress={()=>setScreen('modal')} title ='Pract:modal'/>
-                        <Button onPress={()=>setScreen('bottom sheet')} title ='Pract:button sheet'/>
+                        <Button onPress={()=>setScreen('bottom sheet')} title ='Pract:button sheet'/> 
                         
                     </View>
                 )
