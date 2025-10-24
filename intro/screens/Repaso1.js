@@ -1,20 +1,38 @@
 import React, { useEffect, useRef, useState } from "react";
-import {View,Text,Animated,StyleSheet,Dimensions,ImageBackground,} from "react-native";
+import { View, Text, Animated, StyleSheet, Dimensions, ImageBackground, TextInput, Button, Alert, Switch} from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 
 SplashScreen.preventAutoHideAsync();
 
 const { height } = Dimensions.get("window");
 
-export default function SplashScreenPro() {
+export default function Repaso() {
+  const [isEnabled, setIsEnabled] = useState(false);
   const [showMain, setShowMain] = useState(false);
-
-
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const fadeLogo = useRef(new Animated.Value(0)).current;
   const scaleLogo = useRef(new Animated.Value(0.5)).current;
   const rotateLogo = useRef(new Animated.Value(0)).current;
   const slideText = useRef(new Animated.Value(height / 2)).current;
   const fadeOut = useRef(new Animated.Value(1)).current;
+  const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const Registrarse = () => {
+    if (nombre.trim() === "" ||correo.trim() === "" || !regexEmail.test(correo) || !isEnabled
+    ) {
+      Alert.alert("Error","Por favor completa todos los campos y usa un correo válido");
+      alert('Error: Por favor completa todos los campos');
+      setMensaje("Faltan datos o el correo no es válido");
+    } else {
+      Alert.alert("Registro exitoso",`Nombre: ${nombre}Correo: ${correo}`);
+      alert('¡Éxito! Datos enviados correctamente');
+      setMensaje(`Registro exitoso:${nombre} (${correo})`);
+    }
+  };
 
   useEffect(() => {
     Animated.parallel([
@@ -48,9 +66,8 @@ export default function SplashScreenPro() {
         duration: 800,
         useNativeDriver: false,
       }).start(async () => {
-        await SplashScreen.hideAsync(); 
-        setShowMain(true); 
-        
+        await SplashScreen.hideAsync();
+        setShowMain(true);
       });
     }, 3000);
 
@@ -67,15 +84,40 @@ export default function SplashScreenPro() {
       <ImageBackground
         source={require("../assets/ws7oQ8.jpg")}
         style={styles.background}
-        resizeMode="cover" 
+        resizeMode="cover"
       >
-        <View style={styles.content}>
-          <Text style={styles.text}>¡Bienvenido!</Text>
+        <View style={styles.Registro}>
+          <Text style={styles.title}>Registro de Usuario</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre completo"
+            placeholderTextColor="#ccc"
+            value={nombre}
+            onChangeText={setNombre}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Correo electrónico"
+            placeholderTextColor="#ccc"
+            keyboardType="email-address"
+            value={correo}
+            onChangeText={setCorreo}
+          />
+          <Text style={styles.mensaje}>Aceptas términos y condiciones
+            <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+          </Text>
+          <Button title="Registrarse" onPress={Registrarse} />
+          <Text style={styles.mensaje}>{mensaje}</Text>
         </View>
       </ImageBackground>
     );
   }
-
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeOut }]}>
@@ -92,9 +134,7 @@ export default function SplashScreenPro() {
       />
       <Animated.Text
         style={[styles.text, { transform: [{ translateY: slideText }] }]}
-      >
-        ¡ImageBackground & Splash Screen!
-      </Animated.Text>
+      ></Animated.Text>
       <Animated.View
         style={[
           styles.loader,
@@ -118,7 +158,7 @@ export default function SplashScreenPro() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#007bffff",
+    backgroundColor: "#007bff",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -135,20 +175,35 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    width: "100%", 
-    height: "100%", 
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
-  content: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  Registro: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    borderRadius: 10,
+    gap: 10,
   },
-  text: {
-    color: "white",
-    fontSize: 24,
-    marginBottom: 10,
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  input: {
+    width: "80%",
+    borderWidth: 3,
+    borderColor: "#f5f5f5",
+    padding: 12,
+    borderRadius: 9,
+    color: "#fff",
+  },
+  mensaje: {
+    marginTop: 20,
+    fontSize: 18,
+    color: "#fff",
     textAlign: "center",
   },
 });

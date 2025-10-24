@@ -23,16 +23,16 @@ export default function TextScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Formulario de ejemplo</Text>
+      <Text style={styles.title}>Registro de Usuaro</Text>
       <TextInput
         style={styles.input}
-        placeholder="Escribe tu nombre"
+        placeholder="Nombre completo"
         value={nombre}
         onChangeText={setNombre}
       />
       <TextInput
         style={styles.input}
-        placeholder="Escribe tu contraseña"
+        placeholder="Correo electrónico"
         value={contraseña}
         onChangeText={setContraseña}
         secureTextEntry={true}
