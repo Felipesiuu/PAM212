@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {View,Text,Animated,StyleSheet,Dimensions,ImageBackground,} from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 
-SplashScreen.preventAutoHideAsync();
+//SplashScreen.preventAutoHideAsync();
 
 const { height } = Dimensions.get("window");
 
