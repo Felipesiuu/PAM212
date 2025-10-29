@@ -51,6 +51,7 @@ export default function MenuScreen() {
                         <Button onPress={()=>setScreen('imagen back')} title ='Pract:imagen back'/>
                         <Button onPress={()=>setScreen('scrollView')} title ='Pract:scrollView'/>
                         <Button onPress={()=>setScreen('Horizontal')} title ='Pract:scrollView horizontal'/>
+                        <Button onPress={()=>setScreen('activityindicator')} title ='Pract:'/>
                         <Button onPress={()=>setScreen('flatlist')} title ='Pract:flatlist'/>
                         <Button onPress={()=>setScreen('modal')} title ='Pract:modal'/>
                         <Button onPress={()=>setScreen('bottom sheet')} title ='Pract:button sheet'/> 
