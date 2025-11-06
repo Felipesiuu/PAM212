@@ -22,8 +22,8 @@ export default function ActivityIndicatorScreen () {
           title = 'Detener carga'
           onPress={detenerCarga}
            />
-       </View>
-       <View style = {styles.carga}>
+       </View>  
+       <View style = {styles.carga}>    
         <ActivityIndicator size = 'large'
         color = 'black'
         animating = {cargando}
