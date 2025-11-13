@@ -28,7 +28,7 @@ export default function nose () {
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>¡Hola! Este es un Modal.</Text>
-            <Button title="Cerrar" onPress={cerrarModal} /> {/* PROP onPress: cierra modal */}
+            <Button title="Cerrar" onPress={cerrarModal} />
           </View>
         </View>
       </Modal>
