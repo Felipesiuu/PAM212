@@ -1,5 +1,7 @@
 import { Usuario } from '../models/usuario';
 import DatabaseService from '../database/DatabaseService';
+import { Platform } from "react-native";
+
 
 export class UsuarioController {
     constructor() {
@@ -21,6 +23,42 @@ export class UsuarioController {
             throw new Error('No se pudieron cargar los usuarios');
         }
     }
+
+    async actualizarUsuario(id, nuevoNombre) {
+  try {
+    if (!nuevoNombre || nuevoNombre.trim() === "") {
+      throw new Error("El nombre no puede estar vacío");
+    }
+
+    await DatabaseService.actualizarUsuario(id, nuevoNombre.trim());
+
+    // Aquí sí se refresca la UI
+    this.notifyListeners();
+
+    return true;
+
+  } catch (error) {
+    console.error("Error al actualizar usuario:", error);
+    throw new Error("No se pudo actualizar el usuario");
+  }
+}
+ async eliminarUsuario(id) {
+  try {
+    await DatabaseService.delete(id);
+
+    // Actualiza la UI después de eliminar
+    this.notifyListeners();
+    return true;
+
+  } catch (error) {
+    console.error("Error al eliminar usuario:", error);
+    throw new Error("No se pudo eliminar el usuario");
+  }
+}
+
+
+
+
 
     // Crear usuario nuevo
     async crearUsuario(nombre) {

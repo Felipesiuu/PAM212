@@ -63,6 +63,40 @@ class DatabaseService {
             };
         }
     }
+    async delete(id) {
+  if (Platform.OS === "web") {
+    let usuarios = await this.getAll();
+    usuarios = usuarios.filter(u => u.id !== id);
+    localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
+    return true;
+  }
+
+ await this.db.runAsync(
+  "DELETE FROM usuarios WHERE id = ?",
+  [id]   // <<< ASÍ SÍ FUNCIONA
+);
+
+  return true;
+}
+
+ async actualizarUsuario(id, nuevoNombre) {
+  if (Platform.OS === "web") {
+    let usuarios = await this.getAll();
+    usuarios = usuarios.map(u =>
+      u.id === id ? { ...u, nombre: nuevoNombre } : u
+    );
+    localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
+  } else {
+    await this.db.runAsync(
+      `UPDATE usuarios SET nombre = ? WHERE id = ?`,
+      [nuevoNombre, id]
+    );
+  }
+
+  return true;
+}
+
+
 }
 
 // Exportar instancia única

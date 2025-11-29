@@ -10,6 +10,9 @@ export default function InsertUsuarioScreen() {
   const [nombre, setNombre] = useState('');
   const [loading, setLoading] = useState(true);
   const [guardando, setGuardando] = useState(false);
+  const [editandoId, setEditandoId] = useState(null);
+const [editandoNombre, setEditandoNombre] = useState("");
+
 
   //Cargar usuarios desde la BD
   const cargarUsuarios = useCallback(async () => {
@@ -37,8 +40,9 @@ export default function InsertUsuarioScreen() {
     controller.addListener(cargarUsuarios);
 
     return () => {
-      controller.removeListeners(cargarUsuarios);
-    };
+  controller.removeListener(cargarUsuarios);
+};
+
   }, [cargarUsuarios]);
 
   // Agregar nuevo usuario
@@ -55,27 +59,167 @@ export default function InsertUsuarioScreen() {
       setGuardando(false);
     }
   };
+  const confirmarEdicion = (id, nombreActual) => {
+  if (Platform.OS === "web") {
+    if (confirm(`¿Seguro que quieres editar a "${nombreActual}"?`)) {
+      setEditandoId(id);
+      setEditandoNombre(nombreActual);
+    }
+    return;
+  }
 
-  const renderUsuario = ({item, index}) => (
-    <View style = {styles.userItem}>
-      <View style = {styles.userNumber}>
-        <Text style={styles.userNumberText}>{index + 1}</Text>
-      </View>
-      <View style = {styles.userInfo}>
-        <Text style={styles.userName}>{item.nombre}</Text>
-        <Text style={styles.userId}>{item.id}</Text>
-        <Text style={styles.userDate}>
-          {
-            new Date(item.fechaCreacion).toLocaleDateString('es-MX', {
-              year: 'numeric',
-              month: 'long',
-              day:'numeric',
-            })
-          }
-        </Text>
-      </View>
-    </View>
+  Alert.alert(
+    "Confirmar edición",
+    `¿Seguro que quieres editar a "${nombreActual}"?`,
+    [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Sí, editar",
+        onPress: () => {
+          setEditandoId(id);
+          setEditandoNombre(nombreActual);
+        },
+      },
+    ]
   );
+};
+
+  const confirmar = async (mensaje) => {
+  if (Platform.OS === "web") {
+    return window.confirm(mensaje);
+  } else {
+    return await new Promise((resolve) => {
+      Alert.alert(
+        "Confirmación",
+        mensaje,
+        [
+          { text: "Cancelar", style: "cancel", onPress: () => resolve(false) },
+          { text: "Sí", onPress: () => resolve(true) }
+        ]
+      );
+    });
+  }
+};
+
+const handleEliminar = async (id) => {
+  const seguro = await confirmar("¿Estás seguro de eliminar este usuario?");
+
+  if (!seguro) return;
+
+  try {
+    await controller.eliminarUsuario(id);
+    if (Platform.OS === "web") {
+      alert("Usuario eliminado");   
+    } else {
+      Alert.alert("Eliminado", "Usuario eliminado correctamente");
+    }
+  } catch (error) {
+    Alert.alert("Error", error.message);
+  }
+};
+const handleEditar = async (id, nombreActual) => {
+  if (Platform.OS === "web") {
+    const nuevoNombre = prompt("Editar nombre:", nombreActual);
+
+    if (!nuevoNombre || nuevoNombre.trim() === "") return;
+
+    try {
+      await controller.actualizarUsuario(id, nuevoNombre.trim());
+      alert("Usuario actualizado");
+    } catch (error) {
+      alert(error.message);
+    }
+
+    return;
+  }
+
+  // ANDROID - PANTALLA PEQUEÑA: usar un input en Alert manual
+  let nuevoNombre = nombreActual;
+
+  Alert.alert(
+    "Editar Usuario",
+    "Escribe el nuevo nombre en el campo que aparece abajo",
+    [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Guardar",
+        onPress: async () => {
+          try {
+            await controller.actualizarUsuario(id, nuevoNombre.trim());
+            Alert.alert("Actualizado", "Usuario editado correctamente");
+          } catch (error) {
+            Alert.alert("Error", error.message);
+          }
+        },
+      },
+    ],
+    {
+      cancelable: true,
+    }
+  );
+};
+
+
+
+
+  const renderUsuario = ({ item, index }) => (
+  <View style={styles.userItem}>
+    <View style={styles.userNumber}>
+      <Text style={styles.userNumberText}>{index + 1}</Text>
+    </View>
+
+    <View style={styles.userInfo}>
+
+      {editandoId === item.id ? (
+        <>
+          <TextInput
+            style={styles.input}
+            value={editandoNombre}
+            onChangeText={setEditandoNombre}
+          />
+
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={async () => {
+              await controller.actualizarUsuario(item.id, editandoNombre);
+              setEditandoId(null);
+            }}
+          >
+            <Text style={styles.editButtonText}>Guardar</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => setEditandoId(null)}
+          >
+            <Text style={styles.deleteButtonText}>Cancelar</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <Text style={styles.userName}>{item.nombre}</Text>
+          <Text style={styles.userId}>{item.id}</Text>
+
+          <TouchableOpacity
+             style={styles.editButton}
+            onPress={() => confirmarEdicion(item.id, item.nombre)}
+          > 
+
+            <Text style={styles.editButtonText}>Editar</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => handleEliminar(item.id)}
+          >
+            <Text style={styles.deleteButtonText}>Eliminar</Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </View>
+  </View>
+);
+
 
   return (
 
@@ -329,4 +473,41 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#1976D2',
   },
+  deleteButton: {
+  backgroundColor: '#FF3B30',  
+  paddingVertical: 8,
+  paddingHorizontal: 14,
+  borderRadius: 6,
+  alignSelf: 'flex-start',
+  marginTop: 10,
+},
+deleteButtonText: {
+  color: '#fff',
+  fontWeight: '600',
+  fontSize: 14,
+},
+  UpdateButtonButton: {
+  backgroundColor: '#9eff30ff', 
+  paddingVertical: 8,
+  paddingHorizontal: 20,
+  borderRadius: 6,
+  alignSelf: 'flex-start',
+  marginTop: 10,
+},
+editButton: {
+  backgroundColor: '#FFA500',
+  paddingVertical: 8,
+  paddingHorizontal: 14,
+  borderRadius: 6,
+  alignSelf: 'flex-start',
+  marginTop: 10,
+  marginRight: 10,
+},
+editButtonText: {
+  color: '#fff',
+  fontWeight: '600',
+  fontSize: 14,
+},
+
+
 });
